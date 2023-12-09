@@ -144,5 +144,5 @@ a.FaceColor = "#D95319";
 [H,h,P,AAA] = InitRobot(QQ, 1, DH, jtypes, 0.2);
 
 % Animar o Robo
-pause(1);
+pause();
 AnimateRobot(H, AAA, P, h, 0.01, 1);

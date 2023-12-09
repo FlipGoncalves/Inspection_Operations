@@ -1,6 +1,0 @@
-syms q1 q2 L1 L2
-
-x = L1*cos(q1) + L2*cos(q1 + q2);
-y = L1*sin(q1) + L2*sin(q1 + q2);
-
-J = simplify(jacobian([x, y], [q1, q2]))

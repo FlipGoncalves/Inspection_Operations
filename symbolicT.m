@@ -12,6 +12,8 @@ DH = [
     t9  LH  0  0
 ];
 
+lt = latex(DH)
+
 T = eye(4);
 
 for i = 1:size(DH, 1)
