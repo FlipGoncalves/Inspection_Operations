@@ -13,16 +13,15 @@ function Q = invkinPROJETO(x,y,z,LA,LB,LC,LD,LE,DMIN,DMAX,LG,LH,A)
     % theta 1 -> RR a 3D
     theta1 = atan2(y, x);
 
+    % theta 9
     % V2 = [x y] - A;
     % V2 = V2/norm(V2);
     % PLH = [x y] + V2*LH;
     % x = PLH(1);
     % y = PLH(2);
-
-    % theta 9
-    % P2 = A - [0 0];
-    % P1 = [x y] - [0 0];
-    % theta9 = -acos(dot(P1,P2) / (norm(P1) * norm(P2)));
+    % P2 = - A;
+    % P1 = [x y] - A;
+    % theta9 = -(theta1 + acos(dot(P1,P2) / (norm(P1) * norm(P2))));
     theta9 = 0;
 
     % Verificar se é preciso usar as Juntas 2/3 e 4/5

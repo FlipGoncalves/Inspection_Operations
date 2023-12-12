@@ -118,6 +118,10 @@ Points = [
 Q = zeros([9, size(Points, 2)]);
 for i = 2:size(Points, 2)
     Qi = invkinPROJETO(Points(1,i), Points(2,i), Points(3,i), LA, LB, LC, LD, LE, LF, DMAX, LG, LH, Arvore);
+    if isnan(Qi)
+        disp("Cannot calculate the inverse kinematics for this point");
+        return
+    end
     Q(:,i) = Qi(:,1);  % cotovelo em baixo
 end
 
@@ -156,7 +160,12 @@ end
 
 % Todos os Pontos
 dq = zeros(11, N*((size(Points_Linear, 2) + size(Points_ZZ, 2))-1));
-init = [invkinPROJETO(Points_Linear(1,1), Points_Linear(2,1), Points_Linear(3,1), LA, LB, LC, LD, LE, LF, DMAX, LG, LH, Arvore); 0; 0];
+Qi = invkinPROJETO(Points_Linear(1,1), Points_Linear(2,1), Points_Linear(3,1), LA, LB, LC, LD, LE, LF, DMAX, LG, LH, Arvore);
+if isnan(Qi)
+    disp("Cannot calculate the inverse kinematics for this point");
+    return
+end
+init = [Qi; 0; 0];
 
 % Movimento Linear Inicial
 ind = 1;
@@ -217,6 +226,10 @@ for A=1:size(DH, 1)
 end
 
 Last_Point = invkinPROJETO(T(1,4), T(2,4), T(3,4), LA, LB, LC, LD, LE, LF, DMAX, LG, LH, Arvore);
+if isnan(Last_Point)
+    disp("Cannot calculate the inverse kinematics for this point");
+    return
+end
 
 % normalizar com juntas virtuais
 Last_Point = [Last_Point; 0; 0];
@@ -227,7 +240,7 @@ QQ = [QQ dq Last_Point];
 %%% Gráficos
 % Representar LF num gráfico
 LF_graph = QQ(7,:) + LF;
-subplot(1,2,1);
+subplot(1,3,1);
 hold on;
 grid on;
 plot(LF_graph);
@@ -236,7 +249,7 @@ plot(linspace(DMAX, DMAX, size(LF_graph, 2)));
 legend(["LF", "LF(min)", "LF(max)"]);
 
 % Robo e Arvore de Natal
-subplot(1,2,2);
+subplot(1,3,2:3);
 axis equal;
 axis([-5 10 -5 5 0 6]);
 view(120,30)
@@ -244,7 +257,7 @@ hold on;
 grid on;                                
 xlabel('X');
 ylabel('Y');
-zlabel('Z');
+zlabel('Z');    
 
 % Arvore de Natal
 surf(xTree, yTree, zTree, 'FaceAlpha', 1, 'EdgeColor', 'black', 'FaceColor', 'green');
@@ -262,7 +275,6 @@ for m = 1:M
     Ak = eye(4);
     for n = 1:size(AAA, 3)
         Ak = Ak*AAA(:,:,n,m);
-        Pn = Ak*P;
     end
 
     plot3(Ak(1,4), Ak(2,4), Ak(3,4), '.r');
@@ -270,4 +282,4 @@ end
 
 % Animar o Robo
 pause(1);
-AnimateRobot(H, AAA, P, h, 0.01);
+AnimateRobot(H, AAA, P, h, 0);
